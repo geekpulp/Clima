@@ -81,9 +81,9 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
         if let tempResult = json["main"]["temp"].double {
             weatherDataModel.temperature = Int(tempResult - 273.15)
             weatherDataModel.city = json["name"].stringValue
-            weatherDataModel.condition = json["weather"]["0"]["id"].intValue
+            weatherDataModel.condition = json["weather"][0]["id"].intValue
             weatherDataModel.weatherIconName = weatherDataModel.updateWeatherIcon(condition: weatherDataModel.condition)
-            updateUIWeatherData()
+            updateUIWithWeatherData()
         }
         else {
             cityLabel.text = "The sky is falling! Run!"
@@ -99,9 +99,9 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     
     //Write the updateUIWithWeatherData method here:
     
-    func updateUIWeatherData() {
+    func updateUIWithWeatherData() {
         cityLabel.text = weatherDataModel.city
-        temperatureLabel.text = "\(weatherDataModel.temperature)"
+        temperatureLabel.text = "\(weatherDataModel.temperature)°"
         weatherIcon.image = UIImage(named: weatherDataModel.weatherIconName)
     }
     
@@ -158,7 +158,11 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     
     //Write the userEnteredANewCityName Delegate method here:
     func userEnteredANewCityName(city: String) {
-        print(city)
+        
+        let params : [String: String] = ["q" : city, "appid" : APP_ID]
+        
+        getWeatherData(url: WEATHER_URL, parameters: params)
+        
     }
 
     
